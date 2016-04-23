@@ -1,0 +1,14 @@
+{
+  "name": "bookshelf_progect",
+  "version": "1.0.0",
+  "description": "Bookshelf application",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Alina Vitiuk",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.13.4"
+  }
+}
