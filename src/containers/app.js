@@ -1,65 +1,33 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import User from '../components/User'
+import Page from '../components/Page'
+import * as pageActions from '../actions/PageActions'
 
-var my_books = [
-  {
-    author: 'Т.Г.Шевченко',
-    title: 'Кобзар'
-  },
-  {
-    author: 'Ж.Верн',
-    title: 'Таинственный остров'
-  },
-  {
-    author: 'Н.В.Гоголь',
-    title: 'Мёртвые души'
-  }
-];
-var Books = React.createClass({
-  render: function() {
-    var data = this.props.data;
-    var booksTemplate;
-
-    if (data.length > 0) {
-      booksTemplate = data.map(function(item, i1) {
-        return (
-          <div key={i1}><Article data={i1} /></div>
-        )
-      })
-    } else {
-      booksTemplate = <p>К сожалению книги отсутствуют</p>
-    }
-
-    return (
-      <div className='books'>
-        {booksTemplate}
-        <strong className={'books__count '+ (data.length > 0 ? '':'none')}>Всего книг: {data.length}</strong>
-      </div>
-    );
-  }
-});
-var Article = React.createClass({
-  render: function() {
-    var author = this.props.data.author,
-        title = this.props.data.title;
-    
-    return (
-      <div className='article'>
-        <a href='book.html' className='books__title'>{title}: </a>
-        <a href='author.html' className='books__author'>{author}</a>
-      </div>
-      //<div id="MyBigAjaxElement"></div> //Сюда попадет то, что мы получим при клике по ссылке выше.
-
-    )
-  }
-});
-export default class App extends Component {
+class App extends Component {
   render() {
-    return (
-      <div className='app'>
-        <h2>Перечень доступных книг</h2>
-        <Books data={my_books} /> {/*добавили свойство data */}
-        
-      </div>
-    )
+    const { user, page } = this.props
+    const { getBooks } = this.props.pageActions
+
+    return <div className='row'>
+      <User name={user.name} />
+      <Page photos={page.authors} book={page.book} getBooks={getBooks} fetching={page.fetching}/>
+    </div>
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+    page: state.page
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    pageActions: bindActionCreators(pageActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
