@@ -1,54 +1,23 @@
-var path = require('path')
-var webpack = require('webpack')
-//добавьте новую зависимость в начале конфига
-var NpmInstallPlugin = require('npm-install-webpack-plugin');
-var autoprefixer = require('autoprefixer');
-var precss = require('precss');
-
-module.exports = {
-  devtool: 'cheap-module-eval-source-map',
-  entry: [
-    'webpack-hot-middleware/client',
-    'babel-polyfill',
-    './src/index'
-  ],
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/static/'
-  },
-  //добавьте плагин в секцию плагинов
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new NpmInstallPlugin() 
-  ],
-  module: {
-    preLoaders: [ //добавили ESlint в preloaders
-      {
-        test: /\.js$/,
-        loaders: ['eslint'],
-        include: [
-          path.resolve(__dirname, "src"),
-        ],
-      }
+var webpack = require('webpack');  
+module.exports = {  
+    entry: [
+      'webpack/hot/only-dev-server',
+      "./js/app.js"
     ],
-    loaders: [
-      {
-        loaders: ['react-hot', 'babel-loader'], //добавили babel-loader, добавили loader 'react-hot'
-        include: [
-          path.resolve(__dirname, "src"),
-        ],
-        test: /\.js$/,
-        plugins: ['transform-runtime'],
-      },
-      {
-        test:   /\.css$/,
-        loader: "style-loader!css-loader!postcss-loader"
-      }
+    output: {
+        path: __dirname + '/build',
+        filename: "bundle.js"
+    },
+    module: {
+        loaders: [
+            { test: /\.js?$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/, presets: ['react'] },
+            { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+            { test: /\.css$/, loader: "style!css" },
+            { test: /\.js?$/, exclude: /(node_modules|bower_components)/, loader: 'babel', query: { presets: ['react'] } }
+        ]
+    },
+    plugins: [
+      new webpack.NoErrorsPlugin()
     ]
-  },
-  postcss: function () {
-    return [autoprefixer, precss];
-  }
-}
+
+};

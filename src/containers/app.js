@@ -1,33 +1,18 @@
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import User from '../components/User'
-import Page from '../components/Page'
-import * as pageActions from '../actions/PageActions'
+import { Link } from 'react-router'
 
-class App extends Component {
+export default class App extends Component {
   render() {
-    const { user, page } = this.props
-    const { getBooks } = this.props.pageActions
-
-    return <div className='row'>
-      <User name={user.name} />
-      <Page photos={page.authors} book={page.book} getBooks={getBooks} fetching={page.fetching}/>
-    </div>
+    return (
+      <div className='container'>
+        <h1 >Приложение "Книги"</h1>
+        <ul className='nav nav-pills'>
+          <li><Link to='/booklist'>Список книг</Link></li>
+          <li><Link to='/authorlist'>Список авторов</Link></li>
+        </ul>
+        {/* добавили вывод потомков */}
+        {this.props.children}
+      </div>
+    )
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    user: state.user,
-    page: state.page
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    pageActions: bindActionCreators(pageActions, dispatch)
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
